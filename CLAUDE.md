@@ -6,6 +6,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Student starter repo for a Spark Lakehouse / Medallion course project (Bronze → Silver → Gold on Delta Lake, orchestrated by Airflow, served via DuckDB + Streamlit). Only the `clients` Bronze→Silver pipeline, the DQ framework, the R2 downloader, and CI are fully implemented. Everything else is a `TODO` skeleton that students fill in. The spec lives in `docs/STUDENT_ASSIGNMENT.md` (layer requirements §4.2, DQ §4.3, orchestration §4.4, reporting §4.5); data sanity checks and KPI definitions are in `docs/SANITY_CHECKS.md`. `docs/architecture.md` and `docs/runbook.md` are student deliverables.
 
+## Team & roles
+
+Five-person team; everyone uses this file. Roles come from `team_roles.txt` (untracked, repo root; re-read it for changes). The username in brackets, e.g. `(nike03156)`, is the person's GitHub username. Work in your own area, and don't implement or overwrite another member's deliverables unless asked. If it isn't clear who you're working with, ask (git user / GitHub username helps).
+
+| Member (GitHub) | Area | Owns |
+| :--- | :--- | :--- |
+| Simon Bartek (`simonbartek`) | Data Ingestion & HR | All Bronze daily ingestion (`spark_jobs/bronze/*`), `silver_employees_scd2` (SCD2), `silver_timesheets` dedup/quarantine |
+| Eliška Nikolova (`nike03156`) | **Finance** | `silver_fx_rates_daily`, `silver_invoices`, `silver_expenses` |
+| Anna Snevajsova (`stupydo`) | CRM & eNPS Surveys | `silver_crm_events` (VIP_CORP_001 skew + Spark UI evidence), `silver_survey_responses` / `silver_survey_answers` |
+| Krystof Zak (`sazk06`) | Gold, Reporting & Bonus ML | 5 Gold tables, Streamlit + DuckDB dashboard (4 views), optional churn/NLP bonus |
+| Barbora Synackova (`synackovabab-bit`) | Orchestration, DQ, CI & Agent Skills | Airflow DAG + backfill idempotency, `dq/checks.py` + `dq_audit_results` gates, CI hygiene, team skills/plugins from `spark-lakehouse-marketplace` |
+
+### Finance Domain details (Eliška)
+
+- **Landing data (spec §3.4):** `fx_rates` (JSON, weekdays only; 6 pairs among EUR/USD/CZK), `invoices` (JSONL; mixed `YYYY-MM-DD` and `DD.MM.YYYY`; negative amounts are **credit notes**, not errors; `paid_at = NULL` means unpaid; `PRJ_ORPHAN_*` project ids are orphans), `expenses` (CSV; duplicates; 7 categories; EUR/USD/CZK). `projects` (`budget_eur`) and `clients` feed the invoice joins.
+- **Jobs:** `silver/transform_fx_rates.py` (calendar spine + LOCF via `last(..., ignorenulls=True)`) and `silver/transform_invoices_expenses.py` (EU date parsing, FX → `amount_eur`, orphan quarantine to `silver_quarantine.*` with `dq_reasons`, `is_credit_note`/`net_amount_eur`). Silver order: fx_rates before invoices/expenses.
+- **Dependencies on teammates:** Simon's Bronze finance tables (`ingest_finance.py`); Krystof's Gold marts consume her Silver outputs, so keep column names stable and per the spec; Barbora's DQ gates and DAG tasks wrap these jobs.
+- **Current focus is analyzing the data:** profile `data/landing` directly (pandas/DuckDB/Spark) before building pipeline code.
+
 ## Commands
 
 Spark/Delta tests are meant to run in Docker (avoids Windows `winutils`/JVM issues); CI runs them natively with Java 17.

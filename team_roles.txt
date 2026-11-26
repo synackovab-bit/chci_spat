@@ -1,0 +1,5 @@
+Simon Bartek (simonbartek) - Data Ingestion & HR Domain: Bronze daily ingestion + silver_employees_scd2 (SCD Type 2) + silver_timesheets deduplication/quarantine.
+Eliska Nikolova (nike03156) - Finance Domain: silver_fx_rates_daily (calendar spine + LOCF) + silver_invoices (mixed date parsing, credit notes, orphan quarantine) + silver_expenses.
+Anna Snevajsova (stupydo) - CRM & eNPS Surveys Domain: silver_crm_events (VIP_CORP_001 skew mitigation + Spark UI evidence) + silver_survey_responses & exploded silver_survey_answers.
+Krystof Zak (sazk06) - Gold Marts, Reporting & Bonus ML: The 5 Gold tables (gold_project_profitability, gold_department_finance, gold_client_engagement, gold_hr_enps_analytics, gold_employee_churn_features), Streamlit + DuckDB dashboard (4 views), and optional churn/NLP bonus.
+Barbora Synackova (synackovabab-bit) - Orchestration, DQ, CI & Agent Skills: Airflow DAG & backfill idempotency, dq/checks.py + dq_audit_results gates, CI hygiene, and extending team skills/plugins from spark-lakehouse-marketplace.
