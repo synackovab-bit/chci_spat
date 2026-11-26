@@ -41,5 +41,6 @@ WORKDIR /opt/workspace
 
 ENV SPARK_HOME=/opt/spark
 ENV PYTHONPATH=/opt/workspace
+ENV PATH="/opt/spark/bin:${PATH}"
 
 USER spark
