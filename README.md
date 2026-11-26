@@ -155,3 +155,6 @@ uv run --no-project --with ruff ruff format --check .
 3. **Gold Data Marts:** Implement all 5 Gold tables (`gold_project_profitability`, `gold_department_finance`, `gold_client_engagement`, `gold_hr_enps_analytics`, `gold_employee_churn_features`).
 4. **Data Quality Gates:** Implement full Hard/Soft checks in `dq/checks.py` and wire `dq_*_gate` tasks in Airflow.
 5. **Orchestration & Reporting:** Wire all tasks in `dags/medallion_daily_dag.py`, build the 4 views in `reporting/app.py`, add tests in `tests/`, and complete `docs/architecture.md` and `docs/runbook.md`.
+
+## Team
+- Your Name (GitHub: synackovab-bit)
